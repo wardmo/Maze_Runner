@@ -1,12 +1,28 @@
 from Maze_Types import Maze_Types
+from Protocols import Maze
 
-class Maze_square():
+class Maze_Rep():
 
-    def __init__(self, dim: int):
-        self.content = [ [Maze_Types.Wall for i in range(dim)] for j in range(dim)]
-        self.content[0][1] = Maze_Types.Start
-        self.content[dim-1][dim-2] = Maze_Types.End
-        # TODO assign randomize maze, but don't create any loops or cycles
+    def __init__(self, maze: Maze):
+        wall = Maze_Types.Wall
+        path = Maze_Types.Path
+        rep = [[wall for i in range(2*maze.width+1)] for j in range(2*maze.height+1)]
+        for node in maze.nodes:
+            j,i = node
+            rep[2*j+1][2*i+1] = path
+        for edge in maze.solution:
+            n1, n2 = edge
+            i,j = n1
+            ii,jj = n2
+            if i == ii:
+                rep[2*min(j,jj)+2][2*i+1] = path
+            elif j == jj:
+                rep[2*j+1][2*min(i,ii)+2] = path
+
+        self.content = rep
+
+
+
         pass
 
     def __str__(self):

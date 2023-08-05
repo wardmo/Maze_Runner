@@ -1,13 +1,12 @@
 from random import shuffle
+from Protocols import Maze
 
-class Kruskal_Generation():
-    @classmethod
-    def generate(cls, height, width):
-        return Kruskal_Generation(height, width).solution
+class Kruskal_Generation(Maze):
 
     def __init__(self, height, width):
         self.nodes = set()
         self.edges = set()
+        self.height,self.width = height,width
 
         # populate all the nodes and edges
         for j in range(height):
@@ -22,15 +21,14 @@ class Kruskal_Generation():
         self.clusters = {n:n for n in self.nodes}
         self.ranks = {n:0 for n in self.nodes}
         solution = set()
-        self.edges = list(self.edges)
-        shuffle(self.edges)
+        edgelist = list(self.edges)
+        shuffle(edgelist)
         
-        for n1,n2 in self.edges:
+        for n1,n2 in edgelist:
             if n1 != n2:
                 if self.find_set(n1) != self.find_set(n2):
                     solution.add((n1,n2))
                     self.union(n1,n2)
-
         self.solution = solution
         pass
 
