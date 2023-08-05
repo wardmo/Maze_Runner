@@ -7,6 +7,8 @@ class Maze_Rep():
         wall = Maze_Types.Wall
         path = Maze_Types.Path
         rep = [[wall for i in range(2*maze.width+1)] for j in range(2*maze.height+1)]
+        rep[0][1] = path
+        rep[-1][-2] = path
         for node in maze.nodes:
             j,i = node
             rep[2*j+1][2*i+1] = path
@@ -26,7 +28,7 @@ class Maze_Rep():
         pass
 
     def __str__(self):
-        return '\n'.join([''.join([chr(0x2588) if cell == Maze_Types.Wall else ' ' for cell in row]) for row in self.content])
+        return '\n'.join([''.join([chr(0x2588)*2 if cell == Maze_Types.Wall else '  ' for cell in row]) for row in self.content])
         # a = []
         # for row in self.content:
         #     b = []
