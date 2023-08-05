@@ -12,8 +12,8 @@ class Maze_Rep():
             rep[2*j+1][2*i+1] = path
         for edge in maze.solution:
             n1, n2 = edge
-            i,j = n1
-            ii,jj = n2
+            j,i = n1
+            jj,ii = n2
             if i == ii:
                 rep[2*min(j,jj)+2][2*i+1] = path
             elif j == jj:

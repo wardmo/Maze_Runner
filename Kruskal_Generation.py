@@ -29,7 +29,10 @@ class Kruskal_Generation(Maze):
                 if self.find_set(n1) != self.find_set(n2):
                     solution.add((n1,n2))
                     self.union(n1,n2)
+
         self.solution = solution
+        self.walls = self.edges.difference(self.solution)
+
         pass
 
     def find_set(self, n):
