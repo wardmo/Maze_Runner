@@ -1,3 +1,3 @@
 # Maze_Runner
 
-![your picture is broken]([Imgur](https://imgur.com/pMYPpTS))
+![your picture is broken](https://i.imgur.com/pMYPpTS.png)
