@@ -1,6 +1,7 @@
 import unittest
 from Kruskal_Generation import Kruskal_Generation
 from Maze import Maze_Rep
+from BFS import BFS
 
 
 class Tests(unittest.TestCase):
@@ -27,3 +28,8 @@ class Tests(unittest.TestCase):
         krus = Kruskal_Generation(3,5)
         rep = Maze_Rep(krus)
         print(rep)
+
+    def test_BFS(self):
+        krus = Kruskal_Generation(3,5)
+        bfs = BFS(krus)
+        bfs.solve()

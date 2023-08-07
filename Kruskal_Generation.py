@@ -30,8 +30,9 @@ class Kruskal_Generation(Maze):
                     solution.add((n1,n2))
                     self.union(n1,n2)
 
-        self.solution = solution
-        self.walls = self.edges.difference(self.solution)
+        self.paths = solution
+        self.walls = self.edges.difference(solution)
+        self.solution_nodes = set()
 
         pass
 
