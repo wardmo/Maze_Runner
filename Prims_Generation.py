@@ -17,22 +17,6 @@ class Prims_Generation(Maze):
                 if j < height-1:
                     self.edges.add((current_node, (j+1,i)))
 
-        #Start with a grid full of walls
-        #Pick a cell, mark it as part of the maze. Add the walls of the cell to the wall list
-        #while there are walls in the list:
-        #   1. pick a random wall from the list. If only one of the cells that the wall divides is visited, then:
-        #       1.Make the wall a passage and mark the unvisited cell as part of the maze
-        #       2.Add the neighboring walls of the cell to the wall list
-        #   2.Remove the wall from the list
-
-        #first_node = choice(nodes)
-        #lst = [get_edges(first_node)]
-        #while len(shuffle(lst)) > 0:
-            #n1,n2 = lst.pop()
-            #if n2 not in visited:
-                #solution.add(edge)
-                #visited.add(n2)
-                #lst.extend(get_edges(n2))
         first_node = choice(tuple(self.nodes))
         visited = {first_node}
         solution = set()
