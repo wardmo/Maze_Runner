@@ -4,7 +4,7 @@ from Solver_Base import Solver_Base
 from random import choice
 
 
-class DFS(Solver, Solver_Base):
+class DFS(Solver):
     def __init__(self, maze:Maze):
         self.maze: Maze = maze
         self.visited: list[Maze_Types.NodeId] = []
