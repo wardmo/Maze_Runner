@@ -42,8 +42,8 @@ class Maze_Rep():
 
         pass
 
-    @classmethod
-    def print_colored_block(cls, text, color, width=1):
+    @staticmethod
+    def print_colored_block(text, color, width=1):
 
         # The ANSI escape codes for the different colors.
         ANSI_COLORS = {
@@ -55,19 +55,18 @@ class Maze_Rep():
 
         # Print the colored block.
         return f"{ANSI_COLORS[color]}{text:^{width}}{ANSI_COLORS['reset']}"
+    
+    @staticmethod
+    def get_char_on_type(cell):
+        if cell == Maze_Types.Wall:
+            return chr(0x2588)*2
+        elif cell == Maze_Types.Solution:
+            return Maze_Rep.print_colored_block(chr(0x2588)*2, 'red')
+        elif cell == Maze_Types.Start or cell == Maze_Types.End:
+            return Maze_Rep.print_colored_block(chr(0x2588)*2, 'green')
+        else:
+            return '  '
 
     def __str__(self):
 
-
-
-        def get_char_on_type(cell):
-            if cell == Maze_Types.Wall:
-                return chr(0x2588)*2
-            elif cell == Maze_Types.Solution:
-                return Maze_Rep.print_colored_block(chr(0x2588)*2, 'red')
-            elif cell == Maze_Types.Start or cell == Maze_Types.End:
-                return self.print_colored_block(chr(0x2588)*2, 'green')
-            else:
-                return '  '
-
-        return '\n'.join([''.join([get_char_on_type(cell) for cell in row]) for row in self.content])
+        return '\n'.join([''.join([Maze_Rep.get_char_on_type(cell) for cell in row]) for row in self.content])
