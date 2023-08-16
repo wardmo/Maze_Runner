@@ -6,8 +6,7 @@ https://en.wikipedia.org/wiki/Maze_generation_algorithm
 
 usage:  
 maze = DFS_Generation(14,40)  
-BFS(maze).solve()  
-print(Maze_Rep(maze))  
+print(Maze_Rep(maze, solution_nodes=BFS(maze).solve()))  
 
 ![your picture is broken](https://i.imgur.com/OZN2Iq0.png)
 
