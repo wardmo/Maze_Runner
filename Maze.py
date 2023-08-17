@@ -1,5 +1,7 @@
 from Maze_Types import Maze_Types
 from Protocols import Maze
+from PIL import Image
+import numpy as np
 
 class Maze_Rep():
 
@@ -63,8 +65,28 @@ class Maze_Rep():
                         if self.content[repj][newrepi] == Maze_Types.Path:
                             self.content[repj][newrepi] = Maze_Types.Solution
 
+    def save_img(self, name):
+
+        array = np.array([[Maze_Rep.get_pixel_on_type(cell) for cell in row] for row in self.content], dtype=np.uint8)
+
+        new_image = Image.fromarray(array)
+        new_image.save(name)
+
+
+
     @staticmethod
-    def print_colored_block(text, color, width=1):
+    def get_pixel_on_type(cell):
+        if cell == Maze_Types.Wall:
+            return (0,0,0)
+        elif cell == Maze_Types.Solution:
+            return (245,56,56)
+        elif cell == Maze_Types.Start or cell == Maze_Types.End:
+            return (56,245,56)
+        else:
+            return (250,250,250)
+
+    @staticmethod
+    def get_ascii_block(text, color, width=1):
 
         # The ANSI escape codes for the different colors.
         ANSI_COLORS = {
@@ -82,9 +104,9 @@ class Maze_Rep():
         if cell == Maze_Types.Wall:
             return chr(0x2588)*2
         elif cell == Maze_Types.Solution:
-            return Maze_Rep.print_colored_block(chr(0x2588)*2, 'red')
+            return Maze_Rep.get_ascii_block(chr(0x2588)*2, 'red')
         elif cell == Maze_Types.Start or cell == Maze_Types.End:
-            return Maze_Rep.print_colored_block(chr(0x2588)*2, 'green')
+            return Maze_Rep.get_ascii_block(chr(0x2588)*2, 'green')
         else:
             return '  '
 
