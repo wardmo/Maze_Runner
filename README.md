@@ -24,3 +24,6 @@ rep.save_img('prims.png')
 ## Next steps
 
 ### I want to generate a png during each step of the generation process to animate how the algorithm works
+
+
+### Add a timer to see which algorithms generate mazes the fastest, which algorithms solve the fastest
