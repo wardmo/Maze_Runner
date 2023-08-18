@@ -1,9 +1,5 @@
 # Maze_Runner
 
-Maze Generation Algorithms from here:  
-https://en.wikipedia.org/wiki/Maze_generation_algorithm
-
-
 usage:
 ```python
 maze = DFS_Generation(14,40)  
@@ -27,3 +23,6 @@ rep.save_img('prims.png')
 
 
 ### Add a timer to see which algorithms generate mazes the fastest, which algorithms solve the fastest
+  
+Maze Generation Algorithms from here:  
+https://en.wikipedia.org/wiki/Maze_generation_algorithm
