@@ -1,32 +1,28 @@
-from random import choice
+from random import choice, shuffle
 from Protocols import Maze
 
 
 class DFS_Generation(Maze):
     def __init__(self, height, width):
         self.height, self.width = height, width
-        self.nodes, self.edges = set(),set()
-
-        for j in range(height):
-            for i in range(width):
-                current_node = (j,i)
-                self.nodes.add(current_node)
-
-        first_node = choice(list(self.nodes))
-        self.paths = set()
+        self.nodes = set((j,i) for i in range(width) for j in range(height))
         self.visited = set()
-        self.solution_nodes = set()
-        self._dfs(first_node)
-        pass
 
-    def _dfs(self, node):
-        self.visited.add(node)
-        nodes = self.unvisited_neighbor_nodes(node)
-        while len(nodes) > 0:
-            next_node = nodes.pop(choice(range(len(nodes))))
-            self.paths.add((node,next_node))
-            self._dfs(next_node)
-            nodes = self.unvisited_neighbor_nodes(node)
+        self.paths = set()
+        first = choice(list(self.nodes))
+        frontier = [(first, choice(self.unvisited_neighbor_nodes(first)))]
+        self.visited.add(first)
+        while frontier:
+            previous,current = frontier.pop()
+            if current not in self.visited:
+                next_nodes = self.unvisited_neighbor_nodes(current)
+                shuffle(next_nodes)
+                for next in next_nodes:
+                    frontier.append((current, next))
+                self.paths.add((previous, current))
+                self.visited.add(current)
+
+        pass
 
     def unvisited_neighbor_nodes(self, node):
         j,i = node

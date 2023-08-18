@@ -30,10 +30,11 @@ class DFS(Solver):
                     frontier.append(next_node)
                     solution[frontier[-1]] = current
 
-        self.maze.solution_nodes.add(start)
+        path = set(start)
         while end != start:
-            self.maze.solution_nodes.add(end)
+            path.add(end)
             end = solution[end]
+        return path
 
 
 
