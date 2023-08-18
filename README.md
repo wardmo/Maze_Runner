@@ -1,9 +1,5 @@
 # Maze_Runner
 
-Maze Generation Algorithms from here:  
-https://en.wikipedia.org/wiki/Maze_generation_algorithm
-
-
 usage:
 ```python
 maze = DFS_Generation(14,40)  
@@ -23,6 +19,10 @@ rep.save_img('prims.png')
 
 ## Next steps
 
-### I want to have a better visualization solution, printing to the console has certain limits
-Got this taken care of, but now realizing that generating large mazes with DFS_Generation causes python to break with a RecursionError: maximum recursion depth exceeded while calling a Python object.  
-should refactor DFS_Generation with an iterative implementation instead of recursive
+### I want to generate a png during each step of the generation process to animate how the algorithm works
+
+
+### Add a timer to see which algorithms generate mazes the fastest, which algorithms solve the fastest
+  
+Maze Generation Algorithms from here:  
+https://en.wikipedia.org/wiki/Maze_generation_algorithm
