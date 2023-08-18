@@ -30,7 +30,8 @@ class DFS(Solver):
                     frontier.append(next_node)
                     solution[frontier[-1]] = current
 
-        path = set(start)
+        path = set()
+        path.add(start)
         while end != start:
             path.add(end)
             end = solution[end]
