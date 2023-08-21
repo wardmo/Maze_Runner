@@ -5,12 +5,7 @@ from Protocols import Maze
 class Wilsons_Generation(Maze):
     def __init__(self, height, width):
         self.height,self.width = height,width
-        self.nodes = list()
-
-        for j in range(height):
-            for i in range(width):
-                self.nodes.append((j,i))
-
+        self.nodes = list(list((j,i) for i in range(width)) for j in range(height))
         
         self.paths = set()
         self.solution_nodes = set()
