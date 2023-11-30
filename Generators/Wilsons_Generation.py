@@ -5,14 +5,14 @@ from Protocols import Maze
 class Wilsons_Generation(Maze):
     def __init__(self, height, width):
         self.height,self.width = height,width
-        self.nodes = list(list((j,i) for i in range(width)) for j in range(height))
+        self.nodes = set((j,i) for i in range(self.width) for j in range(self.height))
         
         self.paths = set()
         self.solution_nodes = set()
-        first_node = self.pop_random_node()
+        first_node = self.nodes.pop()
         maze_nodes = {first_node}
         while self.nodes:
-            arb = self.pop_random_node()
+            arb = self.nodes.pop()
             visited = [arb]
             next_node = choice(self.get_neighbor_nodes(arb))
             while next_node not in maze_nodes:
@@ -43,9 +43,5 @@ class Wilsons_Generation(Maze):
         if j > 0:
             nodes.add((j-1,i))
         return list(nodes)
-
-
-    def pop_random_node(self):
-        return self.nodes.pop(choice(range(len(self.nodes))))
 
 

@@ -1,6 +1,6 @@
 from Protocols import Maze, Solver
 from Maze_Types import Maze_Types
-from Solver_Base import Solver_Base
+from Solvers.Solver_Base import Solver_Base
 from random import choice
 
 
