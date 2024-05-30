@@ -1,13 +1,15 @@
 # Maze_Runner
 
-usage:
+## Usage:
 ```python
-maze = DFS_Generation(14,40)  
-print(Maze_Rep(maze, solution_nodes=BFS(maze).solve()))
+maze = Maze.GenerateFromDFS(14,40)
+solution = Solve.SolveBFS(maze)
+print(MazeVisualizer(maze, solution_nodes=solution))
 ```
 ```python
-maze = Prims_Generation(250,250)
-rep = Maze_Rep(maze, solution_nodes=BFS(maze).solve())
+maze = Maze.GenerateFromPrims(250,250)
+solution = Solve.SolveDFS(maze)
+rep = MazeVisualizer(maze, solution_nodes=solution)
 rep.save_img('prims.png')
 ```
 ## Print to console

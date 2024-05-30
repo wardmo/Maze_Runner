@@ -6,7 +6,6 @@ class Maze_Types(Enum):
     Start = 2
     End = 3
     Solution = 4
-    EdgeSet = set[tuple[tuple[int,int],tuple[int,int]]]
     NodeId = tuple[int,int]
-    Edge = tuple[tuple[int,int],tuple[int,int]]
+    Edge = tuple[NodeId,NodeId]
     AdjacencyList = dict[NodeId, set[NodeId]]

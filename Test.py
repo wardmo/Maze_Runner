@@ -1,35 +1,46 @@
 import unittest
-from Kruskal_Generation import Kruskal_Generation
-from Maze import Maze_Rep
-from BFS import BFS
+from Maze import Maze
+from Solver import Solve
+from MazeVisualizer import MazeVisualizer
+
 
 
 class Tests(unittest.TestCase):
 
-    def test_upper(self):
-        self.assertEqual('foo'.upper(), 'FOO')
+    def test_StaticGeneration(self):
+        krus = Maze.GenerateFromKruskal(3,5)
+        print('\n')
+        print(MazeVisualizer(krus))
 
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
+    def test_StaticPrims(self):
+        prim = Maze.GenerateFromPrims(5,5)
+        print('\n')
+        print(MazeVisualizer(prim))
 
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        with self.assertRaises(TypeError):
-            s.split(2)
+    def test_StaticDFS(self):
+        dfs = Maze.GenerateFromDFS(5,5)
+        print('\n')
+        print(MazeVisualizer(dfs))
 
-    def test_square_maze(self):
-        krus = Kruskal_Generation(3,3)
-        rep = Maze_Rep(krus)
-        print(rep)
+    def test_StaticWilson(self):
+        wilson = Maze.GenerateFromWilsons(5,5)
+        print('\n')
+        print(MazeVisualizer(wilson))
 
-    def test_unsquare_maze(self):
-        krus = Kruskal_Generation(3,5)
-        rep = Maze_Rep(krus)
-        print(rep)
+    def test_SolveDFS(self):
+        prim = Maze.GenerateFromPrims(5,5)
+        solution = Solve.SolveDFS(prim)
+        print('\n')
+        print(MazeVisualizer(prim, solution_nodes=solution))
 
-    def test_BFS(self):
-        krus = Kruskal_Generation(3,5)
-        bfs = BFS(krus)
-        bfs.solve()
+    def test_SolveBFS(self):
+        prim = Maze.GenerateFromPrims(5,5)
+        solution = Solve.SolveBFS(prim)
+        print('\n')
+        print(MazeVisualizer(prim, solution_nodes=solution))
+
+    def test_SolveBigger(self):
+        krus = Maze.GenerateFromKruskal(14,40)
+        solution = Solve.SolveDFS(krus)
+        print('\n')
+        print(MazeVisualizer(krus, solution_nodes=solution))

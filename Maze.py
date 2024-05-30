@@ -1,115 +1,196 @@
-from Maze_Types import Maze_Types
-from Protocols import Maze
-from PIL import Image
-import numpy as np
-
-class Maze_Rep():
-
-    def __init__(self, maze: Maze, solution_nodes=set()):
-        wall = Maze_Types.Wall
-        path = Maze_Types.Path
-        rep = [[wall for i in range(2*maze.width+1)] for j in range(2*maze.height+1)]
-        rep[0][1] = Maze_Types.Start
-        rep[-1][-2] = Maze_Types.End
-        for node in maze.nodes:
-            j,i = node
-            repj = 2*j+1
-            repi = 2*i+1
-            if node in solution_nodes:
-                rep[repj][repi] = Maze_Types.Solution
-            else:
-                rep[repj][repi] = path
-        for edge in maze.paths:
-            n1, n2 = edge
-            j,i = n1
-            jj,ii = n2
-            edgej = 2*j+1
-            edgei = 2*i+1
-            if i == ii:
-                edgej = 2*min(j,jj)+2
-                if n1 in solution_nodes and n2 in solution_nodes:
-                    rep[edgej][edgei] = Maze_Types.Solution
-                else:
-                    rep[edgej][edgei] = path
-            elif j == jj:
-                edgei = 2*min(i,ii)+2
-                if n1 in solution_nodes and n2 in solution_nodes:
-                    rep[edgej][edgei] = Maze_Types.Solution
-                else:
-                    rep[edgej][edgei] = path
-
-        self.content = rep
+from Protocols import MazeContract
+from Maze_Types import Maze_Types as MAZE
+from random import shuffle, choice
 
 
-
+class Maze(MazeContract):
+    def __init__(self,paths:set[MAZE.Edge], height:int, width:int) -> None:
+        self.paths = paths
+        self.nodes = set((j,i) for i in range(width) for j in range(height))
+        self.width = width
+        self.height = height
         pass
 
-    def set_solution(self, solution_nodes):
-        for node in solution_nodes:
-            j,i = node
-            repj = 2*j+1
-            repi = 2*i+1
-            self.content[repj][repi] = Maze_Types.Solution
-            adj_nodes = {
-                (j,i+1), (j,i-1), (j-1,i), (j+1,i)
-            }
-            for adj_node in adj_nodes:
-                if adj_node in solution_nodes:
-                    jj,ii = adj_node
-                    if ii == i:
-                        newrepj = 2*min(j,jj)+2
-                        if self.content[newrepj][repi] == Maze_Types.Path:
-                            self.content[newrepj][repi] = Maze_Types.Solution
-                    elif jj == j:
-                        newrepi = 2*min(i,ii)+2
-                        if self.content[repj][newrepi] == Maze_Types.Path:
-                            self.content[repj][newrepi] = Maze_Types.Solution
-
-    def save_img(self, name):
-
-        array = np.array([[Maze_Rep.get_pixel_on_type(cell) for cell in row] for row in self.content], dtype=np.uint8)
-
-        new_image = Image.fromarray(array)
-        new_image.save(name)
-
-
-
     @staticmethod
-    def get_pixel_on_type(cell):
-        if cell == Maze_Types.Wall:
-            return (0,0,0)
-        elif cell == Maze_Types.Solution:
-            return (245,56,56)
-        elif cell == Maze_Types.Start or cell == Maze_Types.End:
-            return (56,245,56)
-        else:
-            return (250,250,250)
+    def GenerateFromKruskal(height_nodes:int, width_nodes:int) -> MazeContract:
 
-    @staticmethod
-    def get_ascii_block(text, color, width=1):
+        nodes:set[MAZE.NodeId] = set()
+        edges:set[MAZE.Edge] = set()
+        for j in range(height_nodes):
+            for i in range(width_nodes):
+                current_node = (j,i)
+                nodes.add(current_node)
+                if i < width_nodes - 1:
+                    edges.add((current_node, (j,i+1)))
+                if j < height_nodes - 1:
+                    edges.add((current_node, (j+1, i)))
+                
+        clusters:dict[MAZE.NodeId,MAZE.NodeId] = {n:n for n in nodes}
+        ranks:dict[MAZE.NodeId, int] = {n:0 for n in nodes}
+        solution: set[MAZE.NodeId] = set()
+        edgelist: list[MAZE.NodeId] = list(edges)
 
-        # The ANSI escape codes for the different colors.
-        ANSI_COLORS = {
-            "red": "\033[31m",
-            "green": "\033[32m",
-            "blue": "\033[34m",
-            "reset": "\033[39m"
-        }
+        def find(n:MAZE.NodeId):
+            if clusters[n] != n:
+                clusters[n] = find(clusters[n])
+            return clusters[n]
+            pass
 
-        # Print the colored block.
-        return f"{ANSI_COLORS[color]}{text:^{width}}{ANSI_COLORS['reset']}"
+        def union(n1:MAZE.NodeId, n2:MAZE.NodeId):
+            x,y = find(n1),find(n2)
+            if ranks[x] == ranks[y]:
+                clusters[y] = x
+            else:
+                clusters[x] = y
+            if ranks[x] == ranks[y]:
+                ranks[y] += 1
+            pass
+
+
+        shuffle(edgelist)
+
+
+        n1: MAZE.NodeId
+        n2: MAZE.NodeId
+        for n1, n2 in edgelist:
+            if find(n1) != find(n2):
+                solution.add((n1,n2))
+                union(n1,n2)
+
+        return Maze(solution, height_nodes, width_nodes)
     
     @staticmethod
-    def get_char_on_type(cell):
-        if cell == Maze_Types.Wall:
-            return chr(0x2588)*2
-        elif cell == Maze_Types.Solution:
-            return Maze_Rep.get_ascii_block(chr(0x2588)*2, 'red')
-        elif cell == Maze_Types.Start or cell == Maze_Types.End:
-            return Maze_Rep.get_ascii_block(chr(0x2588)*2, 'green')
-        else:
-            return '  '
+    def GenerateFromPrims(height_nodes:int, width_nodes:int) -> MazeContract:
 
-    def __str__(self):
+        def get_edges(node:MAZE.NodeId) -> list[MAZE.Edge]:
+            j,i = node
+            edges:list[MAZE.Edge] = []
+            if i < width_nodes - 1:
+                edges.append((node, (j,i+1)))
+            if i > 0:
+                edges.append((node, (j,i-1)))
+            if j < height_nodes - 1:
+                edges.append((node, (j+1,i)))
+            if j > 0:
+                edges.append((node, (j-1,i)))
+            return edges
+            pass
 
-        return '\n'.join([''.join([Maze_Rep.get_char_on_type(cell) for cell in row]) for row in self.content])
+        nodes:set[MAZE.NodeId] = set()
+        edges:set[MAZE.Edge] = set()
+        for j in range(height_nodes):
+            for i in range(width_nodes):
+                current_node = (j,i)
+                nodes.add(current_node)
+                if i < width_nodes - 1:
+                    edges.add((current_node, (j,i+1)))
+                if j < height_nodes - 1:
+                    edges.add((current_node, (j+1,i)))
+        first_node:MAZE.NodeId = choice(tuple(nodes))
+        visited:set[MAZE.NodeId] = {first_node}
+        solution:set[MAZE.Edge] = set()
+        lst:list[MAZE.Edge] = get_edges(first_node)
+        while lst:
+            n1:MAZE.NodeId
+            n2:MAZE.NodeId
+            n1,n2 = lst.pop(choice(range(len(lst))))
+            if (n1 in visited and n2 not in visited) or (n2 in visited and n1 not in visited):
+                solution.add((n1,n2))
+                if n1 not in visited:
+                    visited.add(n1)
+                    lst.extend(get_edges(n1))
+                if n2 not in visited:
+                    visited.add(n2)
+                    lst.extend(get_edges(n2))
+        return Maze(solution, height_nodes, width_nodes)
+    
+    @staticmethod
+    def GenerateFromDFS(height_nodes:int, width_nodes:int) -> MazeContract:
+
+
+        nodes:set[MAZE.NodeId] = set((j,i) for i in range(width_nodes) for j in range(height_nodes))
+        visited:set[MAZE.NodeId] = set()
+
+        def unvisited_neighbor_nodes(node:MAZE.NodeId) -> list[MAZE.NodeId]:
+            j,i = node
+            unvisited_nodes:MAZE.NodeId = set()
+            next:MAZE.NodeId
+            if i < width_nodes - 1:
+                next = (j, i+1)
+                if next not in visited:
+                    unvisited_nodes.add((j,i+1))
+            if i > 0:
+                next = (j, i-1)
+                if next not in visited:
+                    unvisited_nodes.add((j,i-1))
+            if j < height_nodes - 1:
+                next = (j+1, i)
+                if next not in visited:
+                    unvisited_nodes.add((j+1, i))
+            if j > 0:
+                next = (j-1,i)
+                if next not in visited:
+                    unvisited_nodes.add((j-1, i))
+            return list(unvisited_nodes)
+
+        paths:set[MAZE.Edge] = set()
+        first:MAZE.NodeId = choice(list(nodes))
+        frontier:list[MAZE.Edge] = [(first, choice(unvisited_neighbor_nodes(first)))]
+        visited.add(first)
+        previous:MAZE.NodeId
+        current:MAZE.NodeId
+        while frontier:
+            previous,current = frontier.pop()
+            if current not in visited:
+                next_nodes:list[MAZE.NodeId] = unvisited_neighbor_nodes(current)
+                shuffle(next_nodes)
+                next:MAZE.NodeId
+                for next in next_nodes:
+                    frontier.append((current, next))
+                paths.add((previous, current))
+                visited.add(current)
+
+        return Maze(paths, height_nodes, width_nodes)
+    
+    @staticmethod
+    def GenerateFromWilsons(height_nodes:int, width_nodes:int) -> MazeContract:
+
+        def get_neighbor_nodes(node:MAZE.NodeId) -> list[MAZE.NodeId]:
+            j,i = node
+            nodes:MAZE.NodeId = set()
+            if i < width_nodes - 1:
+                nodes.add((j,i+1))
+            if i > 0:
+                nodes.add((j,i-1))
+            if j < height_nodes - 1:
+                nodes.add((j+1,i))
+            if j > 0:
+                nodes.add((j-1,i))
+            return list(nodes)
+
+        nodes:set[MAZE.NodeId] = set((j,i) for i in range(width_nodes) for j in range(height_nodes))
+
+        paths:set[MAZE.Edge] = set()
+        first_node:MAZE.NodeId = nodes.pop()
+        maze_nodes:set[MAZE.NodeId] = {first_node}
+        while nodes:
+            arb:MAZE.NodeId = nodes.pop()
+            visited:list[MAZE.NodeId] = [arb]
+            next_node:MAZE.NodeId = choice(get_neighbor_nodes(arb))
+            while next_node not in maze_nodes:
+                if next_node not in visited:
+                    visited.append(next_node)
+                    next_node = choice(get_neighbor_nodes(next_node))
+                else:
+                    while visited.pop() != next_node:
+                        pass
+            for i,node in enumerate(visited):
+                maze_nodes.add(node)
+                if node in nodes:
+                    nodes.remove(node)
+                next = next_node if i == len(visited) - 1 else visited[i+1]
+                paths.add((node,next))
+
+        nodes = maze_nodes
+
+        return Maze(paths, height_nodes, width_nodes)
