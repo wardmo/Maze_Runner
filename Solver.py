@@ -5,7 +5,7 @@ from collections import deque
 
 class Solve(Solver):
     @staticmethod
-    def create_adjacency_list(maze) -> MAZE.AdjacencyList:
+    def create_adjacency_list(maze:MazeContract) -> MAZE.AdjacencyList:
         adj:MAZE.AdjacencyList = {}
         edge:MAZE.Edge
         for edge in maze.paths:
