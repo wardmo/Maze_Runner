@@ -65,13 +65,15 @@ class MazeVisualizer():
                         if self.content[repj][newrepi] == Maze_Types.Path:
                             self.content[repj][newrepi] = Maze_Types.Solution
 
-    def save_img(self, name):
+    def save_img(self, name=None):
 
         array = np.array([[MazeVisualizer.get_pixel_on_type(cell) for cell in row] for row in self.content], dtype=np.uint8)
 
         new_image = Image.fromarray(array)
-        new_image.save(name)
-
+        if name is not None:
+            new_image.save(name)
+        else:
+            return new_image
 
 
     @staticmethod

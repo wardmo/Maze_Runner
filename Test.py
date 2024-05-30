@@ -2,6 +2,7 @@ import unittest
 from Maze import Maze
 from Solver import Solve
 from MazeVisualizer import MazeVisualizer
+from Animator import ConcreteAnimator
 
 
 
@@ -44,3 +45,23 @@ class Tests(unittest.TestCase):
         solution = Solve.SolveDFS(krus)
         print('\n')
         print(MazeVisualizer(krus, solution_nodes=solution))
+
+    def test_AnimatorKruskal(self):
+        animator = ConcreteAnimator()
+        Maze.GenerateFromKruskal(40,40,animator=animator)
+        animator.animate('kruskal.gif')
+
+    def test_AnimatorPrims(self):
+        animator = ConcreteAnimator()
+        Maze.GenerateFromPrims(40,40, animator=animator)
+        animator.animate('prims.gif')
+    
+    def test_AnimatorDFS(self):
+        animator = ConcreteAnimator()
+        Maze.GenerateFromDFS(40,40, animator=animator)
+        animator.animate('dfs.gif')
+
+    def test_AnimatorWilsons(self):
+        animator = ConcreteAnimator()
+        Maze.GenerateFromWilsons(40,40, animator=animator)
+        animator.animate('wilsons.gif')
