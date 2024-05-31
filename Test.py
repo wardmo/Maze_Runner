@@ -65,3 +65,21 @@ class Tests(unittest.TestCase):
         animator = ConcreteAnimator()
         Maze.GenerateFromWilsons(40,40, animator=animator)
         animator.animate('wilsons.gif')
+
+    def test_AnimatorSolveDFS(self):
+        animator = ConcreteAnimator()
+        krus = Maze.GenerateFromKruskal(40,40)
+        Solve.SolveDFS(krus, animator=animator)
+        animator.animate('krus_solve.gif')
+    
+    def test_AnimatorSolveBFS(self):
+        animator = ConcreteAnimator()
+        krus = Maze.GenerateFromKruskal(40,40)
+        Solve.SolveBFS(krus, animator=animator)
+        animator.animate('krus_solve_bfs.gif')
+
+    def test_FullAnimation(self):
+        animator = ConcreteAnimator()
+        krus = Maze.GenerateFromKruskal(40,40,animator=animator)
+        Solve.SolveDFS(krus, animator=animator)
+        animator.animate('krus_full_generate_solve.gif')

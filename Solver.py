@@ -1,5 +1,6 @@
-from Protocols import Solver, MazeContract
+from Protocols import Solver, MazeContract, Animator
 from Maze_Types import Maze_Types as MAZE
+from Animator import NullAnimator
 from collections import deque
 
 
@@ -24,7 +25,7 @@ class Solve(Solver):
     
     
     @staticmethod
-    def SolveDFS(maze:MazeContract) -> set[MAZE.NodeId]:
+    def SolveDFS(maze:MazeContract, animator:Animator=NullAnimator()) -> set[MAZE.NodeId]:
         start:MAZE.NodeId = (0,0)
         end:MAZE.NodeId = (maze.height-1, maze.width-1)
         frontier:list[MAZE.NodeId] = [start]
@@ -37,6 +38,7 @@ class Solve(Solver):
             if current == end:
                 break
             visited.add(current)
+            animator.save_frame(maze, solution_nodes=set(visited))
             next_node:MAZE.NodeId
             for next_node in adjacency_list[current]:
                 if next_node in visited:
@@ -53,7 +55,7 @@ class Solve(Solver):
         return path
     
     @staticmethod
-    def SolveBFS(maze:MazeContract) -> set[MAZE.NodeId]:
+    def SolveBFS(maze:MazeContract, animator:Animator=NullAnimator()) -> set[MAZE.NodeId]:
         visited:list[MAZE.NodeId] = list()
         adjacency_list:MAZE.AdjacencyList = Solve.create_adjacency_list(maze)
         _deque:deque[list[MAZE.NodeId]] = deque()
@@ -73,3 +75,4 @@ class Solve(Solver):
                     if neighbor == end:
                         return set(new_path)
                 visited.append(node)
+                animator.save_frame(maze, solution_nodes=set(visited))
