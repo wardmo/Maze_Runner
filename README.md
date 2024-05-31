@@ -34,7 +34,7 @@ krus = Maze.GenerateFromKruskal(40,40,animator=animator)
 Solve.SolveDFS(krus, animator=animator)
 animator.animate('krus_full_generate_solve.gif')
 ```
-<img src="https://i.imgur.com/gdpjtbI.gif" alt="your picture is broken" width="500"/>
+<img src="https://i.imgur.com/gKloc7r.gif" alt="your picture is broken" width="500"/>
 
 
 ## Next steps

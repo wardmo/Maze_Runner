@@ -52,6 +52,8 @@ class Solve(Solver):
         while end != start:
             path.add(end)
             end = solution[end]
+        for _ in range(15):
+            animator.save_frame(maze, solution_nodes=path)
         return path
     
     @staticmethod
@@ -73,6 +75,9 @@ class Solve(Solver):
                     _deque.append(new_path)
 
                     if neighbor == end:
-                        return set(new_path)
+                        retval = set(new_path)
+                        for _ in range(15):
+                            animator.save_frame(maze, solution_nodes=retval)
+                        return retval
                 visited.append(node)
                 animator.save_frame(maze, solution_nodes=set(visited))

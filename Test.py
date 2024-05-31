@@ -79,7 +79,10 @@ class Tests(unittest.TestCase):
         animator.animate('krus_solve_bfs.gif')
 
     def test_FullAnimation(self):
-        animator = ConcreteAnimator()
-        krus = Maze.GenerateFromKruskal(40,40,animator=animator)
-        Solve.SolveDFS(krus, animator=animator)
-        animator.animate('krus_full_generate_solve.gif')
+        animator1 = ConcreteAnimator()
+        animator2 = ConcreteAnimator()
+        wilson = Maze.GenerateFromWilsons(40,40)
+        Solve.SolveDFS(wilson, animator=animator1)
+        Solve.SolveBFS(wilson, animator=animator2)
+        animator1.animate('wilson_solve_dfs.gif')
+        animator2.animate('wilson_solve_bfs.gif')
