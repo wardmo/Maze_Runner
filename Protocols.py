@@ -15,7 +15,7 @@ class Solver(Protocol):
         pass
 
 class Animator(Protocol):
-    frames:list[MazeContract]
+    frames:list[tuple[MazeContract,set[Maze_Types.NodeId]]]
     def save_frame(self, maze:MazeContract, solution_nodes:set[Maze_Types.NodeId]=set()) -> None:
         # appends maze state to list of maze states to stitch together and animate
         pass

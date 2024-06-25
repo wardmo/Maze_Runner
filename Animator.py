@@ -15,7 +15,7 @@ class NullAnimator(Animator):
 
 class ConcreteAnimator(Animator):
     def __init__(self) -> None:
-        self.frames:list[MazeContract] = list()
+        self.frames:list[tuple[MazeContract, set[MAZE.NodeId]]] = list()
 
     def save_frame(self, maze:MazeContract, solution_nodes:set[MAZE.NodeId]=set()) -> None:
         self.frames.append((maze,solution_nodes))
