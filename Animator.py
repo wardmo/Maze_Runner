@@ -7,7 +7,7 @@ class NullAnimator(Animator):
     def __init__(self) -> None:
         self.frames:list[MazeContract] = list()
     
-    def save_frame(self, maze:MazeContract) -> None:
+    def save_frame(self, maze:MazeContract, solution_nodes:set[MAZE.NodeId]=set()) -> None:
         pass
 
     def animate(self, filename:str) -> None:

@@ -206,3 +206,79 @@ class Maze(MazeContract):
                 animator.save_frame(Maze(set(paths), height_nodes, width_nodes, nodes=(maze_nodes.union(set(visited)))))
 
         return Maze(paths, height_nodes, width_nodes)
+    
+
+    @staticmethod
+    def GenerateFromOriginShift(height_nodes:int, width_nodes:int, animator:Animator=NullAnimator()) -> MazeContract:
+
+        class Node():
+            def __init__(self, j,i):
+                self.id = (j,i)
+                if i < width_nodes-1:
+                    self.pointer = (j,i+1)
+                elif j < height_nodes-1:
+                    self.pointer = (j+1,i)
+                else:
+                    self.pointer = None
+            def __repr__(self):
+                return f"id:{self.id}  pointer:{self.pointer}"
+            
+        def get_neighbor_nodes(node:MAZE.NodeId) -> list[MAZE.NodeId]:
+            j,i = node
+            nodes:MAZE.NodeId = set()
+            if i < width_nodes - 1:
+                nodes.add((j,i+1))
+            if i > 0:
+                nodes.add((j,i-1))
+            if j < height_nodes - 1:
+                nodes.add((j+1,i))
+            if j > 0:
+                nodes.add((j-1,i))
+            return list(nodes)
+        
+        def reset_origin():
+            origin_value = origin
+            if choice(range(20)) == 10:
+                _n = nodes[choice(list(nodes.keys()))]
+                lst = list()
+                while True:
+                    lst.append(_n.id)
+                    if _n.pointer == None:
+                        break
+                    _n = nodes[_n.pointer]
+                lst.reverse()
+                for i,node in enumerate(lst):
+                    if i == len(lst)-1:
+                        nodes[node].pointer = None
+                        origin_value = nodes[node]
+                    else:
+                        nodes[node].pointer = lst[i+1]
+            return origin_value
+        
+        def get_paths():
+            paths = set()
+            for node in nodes.keys():
+                mynode = nodes[node]
+                if mynode.pointer is not None:
+                    paths.add((nodes[node].id,nodes[node].pointer))
+            return paths
+
+
+        nodes:dict[tuple[int,int],Node] = {(j,i):Node(j,i) for i in range(width_nodes) for j in range(height_nodes)}
+
+        cycles = height_nodes*width_nodes*10
+        origin = nodes[(height_nodes-1,width_nodes-1)]
+        while cycles > 0:
+            animator.save_frame(Maze(get_paths(), height_nodes, width_nodes))
+            origin = reset_origin()
+            next = choice(get_neighbor_nodes(origin.id))
+            origin.pointer = next
+            origin = nodes[next]
+            origin.pointer = None
+            cycles -= 1
+
+
+        paths = get_paths()
+
+        return Maze(paths, height_nodes, width_nodes, set(nodes.keys()))
+

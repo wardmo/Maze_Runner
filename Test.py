@@ -28,6 +28,11 @@ class Tests(unittest.TestCase):
         print('\n')
         print(MazeVisualizer(wilson))
 
+    def test_StaticOriginShift(self):
+        originshift = Maze.GenerateFromOriginShift(20,20)
+        print('\n')
+        print(MazeVisualizer(originshift))
+
     def test_SolveDFS(self):
         prim = Maze.GenerateFromPrims(5,5)
         solution = Solve.SolveDFS(prim)
@@ -66,6 +71,11 @@ class Tests(unittest.TestCase):
         Maze.GenerateFromWilsons(40,40, animator=animator)
         animator.animate('wilsons.gif')
 
+    def test_AnimatorOriginShift(self):
+        animator = ConcreteAnimator()
+        Maze.GenerateFromOriginShift(40,40, animator=animator)
+        animator.animate('originshift.gif')
+
     def test_AnimatorSolveDFS(self):
         animator = ConcreteAnimator()
         krus = Maze.GenerateFromKruskal(40,40)
@@ -86,3 +96,9 @@ class Tests(unittest.TestCase):
         Solve.SolveBFS(wilson, animator=animator2)
         animator1.animate('wilson_solve_dfs.gif')
         animator2.animate('wilson_solve_bfs.gif')
+
+    def test_WallFlowerSolver(self):
+        animator = ConcreteAnimator()
+        krus = Maze.GenerateFromPrims(10,10)
+        Solve.SolveWallFlower(krus, animator=animator)
+        animator.animate('wallflower.gif')

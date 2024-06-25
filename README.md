@@ -43,3 +43,6 @@ animator.animate('krus_full_generate_solve.gif')
   
 Maze Generation Algorithms from here:  
 https://en.wikipedia.org/wiki/Maze_generation_algorithm
+
+Origin Shift Generation Algorithm from here:
+https://www.youtube.com/watch?v=zbXKcDVV4G0&list=LL&index=2&t=72s
